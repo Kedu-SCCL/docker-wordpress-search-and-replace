@@ -23,7 +23,7 @@ services:
   image: localhost/handytec
   #restart: unless-stopped
   volumes:
-   - ~/handytec:/var/www/html
+   - ./html:/var/www/html
   networks:
    - network-handytec
   expose:
