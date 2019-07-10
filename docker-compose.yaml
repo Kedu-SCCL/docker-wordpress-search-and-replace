@@ -26,8 +26,8 @@ services:
    - ./html:/var/www/html
   networks:
    - network-handytec
-  expose:
-   - 80
+  ports:
+   - 80:80
   build:
    context: .
    dockerfile: Dockerfile
