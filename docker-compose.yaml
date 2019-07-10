@@ -28,12 +28,11 @@ services:
    - network-handytec
   expose:
    - 80
-  environment:
   build:
    context: .
    dockerfile: Dockerfile
 
 networks:
- network-drive-exam:
-  name: network-drive-exam
+ network-handytec:
+  name: network-handytec
 
