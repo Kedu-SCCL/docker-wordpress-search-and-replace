@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+
+ db:
+  container_name: db
+  image: mariadb
+  #restart: unless-stopped
+  networks:
+   network-handytec:
+    aliases:
+     - db
+  volumes:
+   - ./db.sql:/docker-entrypoint-initdb.d/db.sql
+  environment:
+   - MYSQL_DATABASE=handytec
+   - MYSQL_USER=handytec
+   - MYSQL_PASSWORD=handytec
+   - MYSQL_ROOT_PASSWORD=root
+
+ app:
+  container_name: app
+  image: localhost/handytec
+  #restart: unless-stopped
+  volumes:
+   - ~/handytec:/var/www/html
+  networks:
+   - network-handytec
+  expose:
+   - 80
+  environment:
+  build:
+   context: .
+   dockerfile: Dockerfile
+
+networks:
+ network-drive-exam:
+  name: network-drive-exam
+
