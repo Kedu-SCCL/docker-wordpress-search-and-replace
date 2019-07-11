@@ -3,24 +3,23 @@ version: '3.7'
 services:
 
  db:
-  container_name: db
-  image: mysql
+  container_name: ${DB_NAME}
+  image: ${DB_IMAGE}:${DB_VERSION}
   #restart: unless-stopped
   networks:
    network-handytec:
     aliases:
-     - db
+     - ${DB_NAME}
   volumes:
-   - ./db.sql:/docker-entrypoint-initdb.d/db.sql
+   - ./${DB_BACKUP_FILENAME}:/docker-entrypoint-initdb.d/${DB_BACKUP_FILENAME}
   environment:
-   - MYSQL_DATABASE=handytec
-   - MYSQL_USER=handytec
-   - MYSQL_PASSWORD=handytec
-   - MYSQL_ROOT_PASSWORD=root
-  command: [mysqld, --character-set-server=utf8, --collation-server=utf8_bin, --default-authentication-plugin=mysql_native_password]
+   - MYSQL_DATABASE=${DB_MYSQL_DATABASE}
+   - MYSQL_USER=${DB_MYSQL_USER}
+   - MYSQL_PASSWORD=${DB_MYSQL_PASSWORD}
+   - MYSQL_ROOT_PASSWORD=${DB_MYSQL_ROOT_PASSWORD}
 
  app:
-  container_name: app
+  container_name: ${APP_NAME}
   image: localhost/handytec
   #restart: unless-stopped
   volumes:
@@ -28,12 +27,12 @@ services:
   networks:
    - network-handytec
   ports:
-   - 80:80
+   - ${APP_PORT_HOST}:${APP_PORT_CONTAINER}
   build:
    context: .
    dockerfile: Dockerfile
 
 networks:
  network-handytec:
-  name: network-handytec
+  name: ${NETWORK_HANDYTEC}
 
