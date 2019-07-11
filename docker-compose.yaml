@@ -29,8 +29,7 @@ services:
   ports:
    - ${APP_PORT_HOST}:${APP_PORT_CONTAINER}
   build:
-   context: .
-   dockerfile: Dockerfile
+   context: ./app
    args:
     - IMAGE=${APP_IMAGE}
     - VERSION=${APP_VERSION}

@@ -18,6 +18,8 @@ RUN docker-php-ext-install gd
 
 RUN a2enmod rewrite
 
+COPY search-replace-wp-kedu /search-replace-wp-kedu
+
 WORKDIR /var/www/html/
 
 EXPOSE 80

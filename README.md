@@ -1,6 +1,4 @@
-# Usage
-
-## Initial setup (just one time)
+# Initial setup (just one time)
 
 1. (Optional) Edit ".env" file to seup variables
 
@@ -23,7 +21,7 @@ DB_MYSQL_ROOT_PASSWORD=handytec
 
 4. Adjust "wp-config.php" settings to match database credentials of ".env" file
 
-## Start the environment
+# Start the environment
 
 1. Bring down the environment
 
@@ -56,6 +54,69 @@ Until you see a line similar to:
 http://localhost
 
 TODO: more information coming soon
+
+# Search and replace (domain changes)
+
+Procedure needed by Wordpress when hostname part changes. See [this](https://wordpress.org/support/article/changing-the-site-url/)
+
+
+1. Launch below command, adjusting database settings:
+
+```
+docker exec -ti app php /search-replace-wp-kedu/srdb.cli.php -h db -n handytec -u handytec -p handytec -s 'http://handytec.es/v1' -r 'localhost' 
+```
+
+Expected output similar to:
+
+```
+wp_woocommerce_shipping_zone_locations: 0 rows, 0 changes found, 0 updates                     wp_woocommerce_downloadable_product_permissions: 0 rows, 0 changes found, 0 updates           
+Replacing http://handytec.es/v1 with localhost 
+on 89 tables with 49861 rows 
+
+0 changes were made 
+0 updates
+
+results: The table "wp_icl_locale_map" has no primary key. 
+Changes will have to be made manually.
+
+Execution Time: 0 mins 1 secs
+```
+
+In this case the procedure failed, we should ignore table "wp_icl_locale_map"
+
+2. Test it
+
+2.1. Connect to the database container
+
+```
+docker exec -ti db bash
+```
+
+2.2. Connect to database engine
+
+```
+mysql -u root -p
+```
+
+2.3. Connect to the right database
+
+```
+use handytec;
+```
+
+2.4. Check value of "siteurl" variable
+
+```
+select * from wp_options where option_name like 'siteurl';
+```
+
+Expected output similar to:
+
+```
+TODO: provide output
+```
+
+If the output does not matches the "-r" parameter of step 1 the replacement went wrong and we need to launch it again, maybe excluding tables with primary keys
 
 # Stop
 
