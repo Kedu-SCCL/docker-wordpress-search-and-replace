@@ -82,41 +82,32 @@ Changes will have to be made manually.
 Execution Time: 0 mins 1 secs
 ```
 
-In this case the procedure failed, we should ignore table "wp_icl_locale_map"
+In this case the procedure failed, we should ignore table "wp_icl_locale_map":
+
+```
+TABLES=wp5h_commentmeta,wp5h_comments,wp5h_links,wp5h_options,wp5h_postmeta,wp5h_posts,wp5h_term_relationships,wp5h_term_taxonomy,wp5h_termmeta,wp5h_terms,wp5h_usermeta,wp5h_users,wp_blc_filters,wp_blc_instances,wp_blc_links,wp_blc_synch,wp_commentmeta,wp_comments,wp_icl_cms_nav_cache,wp_icl_content_status,wp_icl_core_status,wp_icl_flags,wp_icl_languages,wp_icl_languages_translations,wp_icl_message_status,wp_icl_mo_files_domains,wp_icl_node,wp_icl_reminders,wp_icl_string_packages,wp_icl_string_pages,wp_icl_string_positions,wp_icl_string_status,wp_icl_string_translations,wp_icl_string_urls,wp_icl_strings,wp_icl_translate,wp_icl_translate_job,wp_icl_translation_batches,wp_icl_translation_status,wp_icl_translations,wp_layerslider,wp_layerslider_revisions,wp_links,wp_options,wp_postmeta,wp_posts,wp_revslider_css,wp_revslider_layer_animations,wp_revslider_navigations,wp_revslider_sliders,wp_revslider_slides,wp_revslider_static_slides,wp_rg_form,wp_rg_form_meta,wp_rg_form_view,wp_rg_incomplete_submissions,wp_rg_lead,wp_rg_lead_detail,wp_rg_lead_detail_long,wp_rg_lead_meta,wp_rg_lead_notes,wp_smush_dir_images,wp_term_relationships,wp_term_taxonomy,wp_termmeta,wp_terms,wp_usermeta,wp_users,wp_w3tc_cdn_queue,wp_wc_download_log,wp_wc_webhooks,wp_woocommerce_api_keys,wp_woocommerce_attribute_taxonomies,wp_woocommerce_downloadable_product_permissions,wp_woocommerce_log,wp_woocommerce_order_itemmeta,wp_woocommerce_order_items,wp_woocommerce_payment_tokenmeta,wp_woocommerce_payment_tokens,wp_woocommerce_sessions,wp_woocommerce_shipping_zone_locations,wp_woocommerce_shipping_zone_methods,wp_woocommerce_shipping_zones,wp_woocommerce_tax_rate_locations,wp_woocommerce_tax_rates,wp_woocommerce_termmeta,wp_yoast_seo_links,wp_yoast_seo_meta &&\
+docker exec -ti app php /search-replace-wp-kedu/srdb.cli.php -h db -n handytec -u handytec -p handytec -s 'http://handytec.es/v1' -r 'localhost' -t $TABLES
+```
 
 2. Test it
 
-2.1. Connect to the database container
+2.1. Launch below command
 
 ```
-docker exec -ti db bash
-```
-
-2.2. Connect to database engine
-
-```
-mysql -u root -p
-```
-
-2.3. Connect to the right database
-
-```
-use handytec;
-```
-
-2.4. Check value of "siteurl" variable
-
-```
-select * from wp_options where option_name like 'siteurl';
+docker exec -ti db mysql -u handytec -p -e "use handytec; select * from wp_options where option_name like 'siteurl';"
 ```
 
 Expected output similar to:
 
 ```
-TODO: provide output
++-----------+-------------+---------------------------+----------+
+| option_id | option_name | option_value              | autoload |
++-----------+-------------+---------------------------+----------+
+|         1 | siteurl     | http://www.handytec.es/v1 | yes      |
++-----------+-------------+---------------------------+----------+
 ```
 
-If the output does not matches the "-r" parameter of step 1 the replacement went wrong and we need to launch it again, maybe excluding tables with primary keys
+If the output does not matches the "-r" parameter of step 1 the replacement went wrong and we need to launch it again, maybe excluding tables with primary keys.
 
 # Stop
 
