@@ -43,10 +43,13 @@ docker-compose up --build -d
 docker logs -f db
 ```
 
-Until you see a line similar to:
+Until you see some lines similar to:
 
 ```
-2019-07-11  6:12:44 0 [Note] mysqld: ready for connections.
+...
+MySQL init process done. Ready for start up.
+...
+2019-07-11  9:07:35 0 [Note] mysqld: ready for connections.
 ```
 
 4. Test it
