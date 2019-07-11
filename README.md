@@ -24,7 +24,7 @@ DB_MYSQL_ROOT_PASSWORD=handytec
 5. In this case we need to edit ".htaccess" file as well to remove the "/v1" part:
 
 ```
-sed -i 's/\/v1//g' html/.htaccess
+sed -i 's/v1\///g' html/.htaccess
 ```
 
 # Start the environment
