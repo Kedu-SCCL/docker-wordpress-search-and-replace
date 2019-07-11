@@ -21,6 +21,12 @@ DB_MYSQL_ROOT_PASSWORD=handytec
 
 4. Adjust "wp-config.php" settings to match database credentials of ".env" file
 
+5. In this case we need to edit ".htaccess" file as well to remove the "/v1" part:
+
+```
+sed -i 's/\/v1//g' html/.htaccess
+```
+
 # Start the environment
 
 1. Bring down the environment
