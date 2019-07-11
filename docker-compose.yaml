@@ -20,10 +20,10 @@ services:
 
  app:
   container_name: ${APP_NAME}
-  image: localhost/handytec
+  image: localhost/handytec:${APP_VERSION}
   #restart: unless-stopped
   volumes:
-   - ./html:/var/www/html
+   - ./${APP_HTML}:/var/www/html
   networks:
    - network-handytec
   ports:
@@ -31,6 +31,9 @@ services:
   build:
    context: .
    dockerfile: Dockerfile
+   args:
+    - IMAGE=${APP_IMAGE}
+    - VERSION=${APP_VERSION}
 
 networks:
  network-handytec:
