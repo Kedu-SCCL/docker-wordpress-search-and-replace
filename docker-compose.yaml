@@ -34,6 +34,17 @@ services:
     - IMAGE=${APP_IMAGE}
     - VERSION=${APP_VERSION}
 
+ phpmyadmin:
+  container_name: ${PHPMYADMIN_NAME}
+  image: ${PHPMYADMIN_IMAGE}:${PHPMYADMIN_VERSION}
+  #restart: unless-stopped
+  networks:
+   - network-handytec
+  ports:
+   - ${PHPMYADMIN_PORT_HOST}:${PHPMYADMIN_PORT_CONTAINER}
+  environment:
+   - DATABASE_HOST=${DB_NAME}
+
 networks:
  network-handytec:
   name: ${NETWORK_HANDYTEC}

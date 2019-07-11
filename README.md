@@ -102,6 +102,38 @@ Expected output similar to:
 
 If the output does not matches the "-r" parameter of step 1 the replacement went wrong and we need to launch it again, maybe excluding tables with primary keys.
 
+# Access phpmyadmin
+
+In case that you need to interact with the database whith a graphical interface you can use bundled phpmyadmin
+
+1. Wait until db is ready. It cant take 1m to 4m to startup
+
+1.1. Tail the logs
+
+```
+docker logs -f db
+```
+
+Until you see some lines similar to:
+
+```
+...
+MySQL init process done. Ready for start up.
+...
+2019-07-11  9:07:35 0 [Note] mysqld: ready for connections.
+```
+
+2. If you made no changes in ".env" file you could access it from
+
+http://localhost:8000
+
+3. Type the credentials, taken from ".env" file:
+
+* Username: DB_MYSQL_USER
+* Password: DB_MYSQL_PASSWORD
+
+4. Access to the database matching the "DB_MYSQL_DATABASE" variable in ".env" file
+
 # Stop
 
 ```
