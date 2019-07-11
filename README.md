@@ -19,7 +19,7 @@ docker-compose down
 2. Start up the environment
 
 ```
-docker-compose up -d
+docker-compose up --build -d
 ```
 
 3. Wait until db is ready. It cant take 1m to 4m to startup
