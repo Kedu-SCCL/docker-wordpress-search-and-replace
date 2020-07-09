@@ -6,19 +6,31 @@
 db/dump.sql
 ```
 
-2. (Optional) In case that is not the first time that you use the script, just in case bring down the environment
+2. Choose if you want to use the sample 'search-and-replace.sh' script for a very basic usage or follow manual instructions for more detailed steps.
+
+## Using 'search-and-replace.sh' script
+
+1. Execute 'search-and-replace.sh' script passing as a parameters origin and destination URLs. Example:
+
+```
+./search-and-replace.sh http://localhost:8000 http://example.com
+```
+
+## Manual
+
+1. (Optional) In case that is not the first time that you use the script, just in case bring down the environment
 
 ```
 docker-compose down
 ```
 
-3. Start up the environment
+2. Start up the environment
 
 ```
 docker-compose up -d --build --force-recreate
 ```
 
-4. Wait until db is ready
+3. Wait until db is ready
 
 ```
 watch -n 5 "docker exec -i db mysqladmin ping -u wordpress -pwordpress"
@@ -32,7 +44,7 @@ mysqld is alive
 
 Then press CTRL + C
 
-5. Perform the replace. In this example we will replace old URL 'http://localhost:8000' by the new one 'http://example.com':
+4. Perform the replace. In this example we will replace old URL 'http://localhost:8000' by the new one 'http://example.com':
 
 ```
 docker exec -ti app php /wordpress-search-and-replace/srdb.cli.php -h db -n wordpress -u wordpress -p wordpress -s "http://localhost:8000" -r "http://example.com"
@@ -51,7 +63,7 @@ on 46 tables with 6661 rows
 Execution Time: 0 mins 0 secs
 ```
 
-6. Test it
+5. Test it
 
 We would check if 'siteurl' variable has been replaced:
 
@@ -65,7 +77,7 @@ Expected output similar to:
 http://example.com
 ```
 
-7. Dump the database content with changes applied
+6. Dump the database content with changes applied
 
 ```
 docker exec -i db mysqldump wordpress -u wordpress -pwordpress > out.sql
@@ -73,7 +85,7 @@ docker exec -i db mysqldump wordpress -u wordpress -pwordpress > out.sql
 
 A file called ```out.sql``` should be created, containing the database content with the changes applied.
 
-8. Cleanup
+7. Cleanup
 
 ```
 docker-compose down
