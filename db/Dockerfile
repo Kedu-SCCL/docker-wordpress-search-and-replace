@@ -1,0 +1,11 @@
+ARG IMAGE
+
+ARG VERSION
+
+FROM $IMAGE:$VERSION
+
+ARG DB_FILENAME
+
+MAINTAINER info@kedu.coop
+
+COPY $DB_FILENAME /docker-entrypoint-initdb.d

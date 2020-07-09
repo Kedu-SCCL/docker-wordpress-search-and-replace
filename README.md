@@ -1,155 +1,81 @@
-# Initial setup (just one time)
+# Instructions
 
-1. (Optional) Edit ".env" file to seup variables
-
-```
-vim .env
-```
-
-For instance database credentials:
+1. Place the database dump in the 'db' directory and name it with '.sql' extension. Example:
 
 ```
-DB_MYSQL_DATABASE=handytec
-DB_MYSQL_USER=handytec
-DB_MYSQL_PASSWORD=handytec
-DB_MYSQL_ROOT_PASSWORD=handytec
+db/dump.sql
 ```
 
-2. Get a wordpress database backup and place it at "db.sql" (or the name of "DB_BACKUP_FILENAME" variable in ".env" file)
-
-3. Get a wordpress filesystem backup and place it at "html" (or the name of "APP_HTML" variable in ".env" file)
-
-4. Adjust "wp-config.php" settings to match database credentials of ".env" file
-
-5. In this case we need to edit ".htaccess" file as well to remove the "/v1" part:
-
-```
-sed -i 's/v1\///g' html/.htaccess
-```
-
-# Start the environment
-
-1. Bring down the environment
+2. (Optional) In case that is not the first time that you use the script, just in case bring down the environment
 
 ```
 docker-compose down
 ```
 
-2. Start up the environment
+3. Start up the environment
 
 ```
-docker-compose up --build -d
+docker-compose up -d --build --force-recreate
 ```
 
-3. Wait until db is ready. It cant take 1m to 4m to startup
-
-3.1. Tail the logs
+4. Wait until db is ready
 
 ```
-docker logs -f db
+watch -n 5 "docker exec -i db mysqladmin ping -u wordpress -pwordpress"
 ```
 
-Until you see some lines similar to:
+Usualy it takes less than 1 minute, wait until you see below line:
 
-```
 ...
-MySQL init process done. Ready for start up.
-...
-2019-07-11  9:07:35 0 [Note] mysqld: ready for connections.
+mysqld is alive
 ```
 
-4. Test it
+Then press CTRL + C
 
-http://localhost
-
-TODO: more information coming soon
-
-# Search and replace (domain changes)
-
-Procedure needed by Wordpress when hostname part changes. See [this](https://wordpress.org/support/article/changing-the-site-url/)
-
-
-1. Launch below command, adjusting database settings:
+5. Perform the replace. In this example we will replace old URL 'http://localhost:8000' by the new one 'http://example.com':
 
 ```
-TABLES=wp5h_commentmeta,wp5h_comments,wp5h_links,wp5h_options,wp5h_postmeta,wp5h_posts,wp5h_term_relationships,wp5h_term_taxonomy,wp5h_termmeta,wp5h_terms,wp5h_usermeta,wp5h_users,wp_blc_filters,wp_blc_instances,wp_blc_links,wp_blc_synch,wp_commentmeta,wp_comments,wp_icl_cms_nav_cache,wp_icl_content_status,wp_icl_core_status,wp_icl_flags,wp_icl_languages,wp_icl_languages_translations,wp_icl_message_status,wp_icl_mo_files_domains,wp_icl_node,wp_icl_reminders,wp_icl_string_packages,wp_icl_string_pages,wp_icl_string_positions,wp_icl_string_status,wp_icl_string_translations,wp_icl_string_urls,wp_icl_strings,wp_icl_translate,wp_icl_translate_job,wp_icl_translation_batches,wp_icl_translation_status,wp_icl_translations,wp_layerslider,wp_layerslider_revisions,wp_links,wp_options,wp_postmeta,wp_posts,wp_revslider_css,wp_revslider_layer_animations,wp_revslider_navigations,wp_revslider_sliders,wp_revslider_slides,wp_revslider_static_slides,wp_rg_form,wp_rg_form_meta,wp_rg_form_view,wp_rg_incomplete_submissions,wp_rg_lead,wp_rg_lead_detail,wp_rg_lead_detail_long,wp_rg_lead_meta,wp_rg_lead_notes,wp_smush_dir_images,wp_term_relationships,wp_term_taxonomy,wp_termmeta,wp_terms,wp_usermeta,wp_users,wp_w3tc_cdn_queue,wp_wc_download_log,wp_wc_webhooks,wp_woocommerce_api_keys,wp_woocommerce_attribute_taxonomies,wp_woocommerce_downloadable_product_permissions,wp_woocommerce_log,wp_woocommerce_order_itemmeta,wp_woocommerce_order_items,wp_woocommerce_payment_tokenmeta,wp_woocommerce_payment_tokens,wp_woocommerce_sessions,wp_woocommerce_shipping_zone_locations,wp_woocommerce_shipping_zone_methods,wp_woocommerce_shipping_zones,wp_woocommerce_tax_rate_locations,wp_woocommerce_tax_rates,wp_woocommerce_termmeta,wp_yoast_seo_links,wp_yoast_seo_meta &&\
-docker exec -ti app php /search-replace-wp-kedu/srdb.cli.php -h db -n handytec -u handytec -p handytec -s "http://www.handytec.es/v1" -r "http://localhost" -t $TABLES
+docker exec -ti app php /wordpress-search-and-replace/srdb.cli.php -h db -n wordpress -u wordpress -p wordpress -s "http://localhost:8000" -r "http://example.com"
 ```
 
 Expected output similar to:
 
 ```
- wp_woocommerce_downloadable_product_permissions: 0 rows, 0 changes found, 0 updates            wp_woocommerce_shipping_zone_locations: 0 rows, 0 changes found, 0 updates                    
-Replacing http://www.handytec.es/v1 with http://localhost 
-on 88 tables with 49861 rows 
+[09-Jul-2020 09:06:33 Europe/London] PHP Warning:  "continue" targeting switch is equivalent to "break". Did you mean to use "continue 2"? in /wordpress-search-and-replace/srdb.class.php on line 974
+ wp_woocommerce_shipping_zone_locations: 0 rows, 0 changes found, 0 updates                     wp_woocommerce_downloadable_product_permissions: 0 rows, 0 changes found, 0 updates           
+Replacing http://localhost:8000 with http://example.com 
+on 46 tables with 6661 rows 
 
-1072 changes were made 
-998 updates
-Execution Time: 0 mins 6 secs
+85 changes were made 
+75 updates
+Execution Time: 0 mins 0 secs
 ```
 
-2. Test it
+6. Test it
 
-2.1. Launch below command
+We would check if 'siteurl' variable has been replaced:
 
 ```
-docker exec -ti db mysql -u handytec -p -e "use handytec; select * from wp_options where option_name like 'siteurl';"
+docker exec db mysql -u wordpress -pwordpress -e "use wordpress; select option_value from wp_options where option_name='siteurl';"
 ```
 
 Expected output similar to:
 
 ```
-+-----------+-------------+------------------+----------+
-| option_id | option_name | option_value     | autoload |
-+-----------+-------------+------------------+----------+
-|         1 | siteurl     | http://localhost | yes      |
-+-----------+-------------+------------------+----------+
+http://example.com
 ```
 
-If the output does not matches the "-r" parameter of step 1 the replacement went wrong and we need to launch it again, maybe excluding tables with primary keys.
-
-# Access phpmyadmin
-
-In case that you need to interact with the database whith a graphical interface you can use bundled phpmyadmin
-
-1. Wait until db is ready. It cant take 1m to 4m to startup
-
-1.1. Tail the logs
+7. Dump the database content with changes applied
 
 ```
-docker logs -f db
+docker exec -i db mysqldump wordpress -u wordpress -pwordpress > out.sql
 ```
 
-Until you see some lines similar to:
+A file called ```out.sql``` should be created, containing the database content with the changes applied.
+
+8. Cleanup
 
 ```
-...
-MySQL init process done. Ready for start up.
-...
-2019-07-11  9:07:35 0 [Note] mysqld: ready for connections.
-```
-
-2. If you made no changes in ".env" file you could access it from
-
-http://localhost:8000
-
-3. Type the credentials, taken from ".env" file:
-
-* Username: DB_MYSQL_USER
-* Password: DB_MYSQL_PASSWORD
-
-4. Access to the database matching the "DB_MYSQL_DATABASE" variable in ".env" file
-
-# Stop
-
-```
-cd /path/to/docker-handytec
-docker-compose stop
-```
-# Clean up
-
-```
-cd /path/to/docker-handytec
 docker-compose down
 ```
 
@@ -175,4 +101,17 @@ Execution Time: 0 mins 1 secs
 
 You should ignore table "wp_icl_locale_map". Currently the only chance is specifying as "-t" parameter the whole list of tables excluding the offending one, "wp_icl_locale_map" in this case
 
+## db: Connection refused
 
+If you found an error similar to:
+
+```
+[09-Jul-2020 09:24:05 Europe/London] PHP Warning:  "continue" targeting switch is equivalent to "break". Did you mean to use "continue 2"? in /wordpress-search-and-replace/srdb.class.php on line 974
+mysqli_connect(): (HY000/2002): Connection refused
+
+db: Connection refused
+
+Execution Time: 0 mins 0 secs
+```
+
+Just wait some seconds before re-launching the command, since the database is not yet ready.
