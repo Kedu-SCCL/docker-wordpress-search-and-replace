@@ -25,7 +25,7 @@ while [ `num_server_started` -lt 2 ]; do
     sleep $SLEEP
 done
 
-docker exec -ti $APP_NAME php /wordpress-search-and-replace/srdb.cli.php -h $DB_NAME -n $DB_MYSQL_DATABASE -u $DB_MYSQL_USER -p $DB_MYSQL_PASSWORD -s $1 -r $2
+docker exec -i $APP_NAME php /wordpress-search-and-replace/srdb.cli.php -h $DB_NAME -n $DB_MYSQL_DATABASE -u $DB_MYSQL_USER -p $DB_MYSQL_PASSWORD -s $1 -r $2
 
 rm -fr $OUTPUT_FILE
 
