@@ -14,6 +14,12 @@ services:
   image: localhost/search-and-replace:${APP_VERSION}
 
  db:
+  # Build is need becasue if the 'docker-compose up' command is executed from within a docker container (for instance jenkins node) the volume will not work, will be empty
+  build:
+   context: ./db
+   args:
+    - IMAGE=${DB_IMAGE}
+    - VERSION=${DB_VERSION}
   container_name: ${DB_NAME}
   environment:
    - MYSQL_DATABASE=${DB_MYSQL_DATABASE}
@@ -21,5 +27,6 @@ services:
    - MYSQL_PASSWORD=${DB_MYSQL_PASSWORD}
    - MYSQL_ROOT_PASSWORD=${DB_MYSQL_ROOT_PASSWORD}
   image: ${DB_IMAGE}:${DB_VERSION}
-  volumes:
-   - ./db:/docker-entrypoint-initdb.d
+  # The .sql file (if any) will be copied at build time, because if the 'docker-compose up' command is executed from within a docker container (for instance jenkins node) the volume will not work, will be empty
+  #volumes:
+  # - ./db:/docker-entrypoint-initdb.d
