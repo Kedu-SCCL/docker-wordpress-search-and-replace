@@ -23,9 +23,11 @@ services:
   container_name: ${DB_NAME}
   environment:
    - MYSQL_DATABASE=${DB_MYSQL_DATABASE}
-   - MYSQL_USER=${DB_MYSQL_USER}
+   # https://github.com/docker-library/mariadb/issues/261#issuecomment-532786537
+   - MYSQL_INITDB_SKIP_TZINFO=1
    - MYSQL_PASSWORD=${DB_MYSQL_PASSWORD}
    - MYSQL_ROOT_PASSWORD=${DB_MYSQL_ROOT_PASSWORD}
+   - MYSQL_USER=${DB_MYSQL_USER}
   image: ${DB_IMAGE}:${DB_VERSION}
   # The .sql file (if any) will be copied at build time, because if the 'docker-compose up' command is executed from within a docker container (for instance jenkins node) the volume will not work, will be empty
   #volumes:
