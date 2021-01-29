@@ -11,7 +11,11 @@ services:
   container_name: ${APP_NAME}
   depends_on:
     - db
-  image: localhost/search-and-replace:${APP_VERSION}
+  environment:
+   - WORDPRESS_DB_HOST=${DB_NAME}
+   - WORDPRESS_DB_NAME=${DB_MYSQL_DATABASE}
+   - WORDPRESS_DB_USER=${DB_MYSQL_USER}
+   - WORDPRESS_DB_PASSWORD=${DB_MYSQL_PASSWORD}
 
  db:
   # Build is need becasue if the 'docker-compose up' command is executed from within a docker container (for instance jenkins node) the volume will not work, will be empty
@@ -20,6 +24,7 @@ services:
    args:
     - IMAGE=${DB_IMAGE}
     - VERSION=${DB_VERSION}
+    - DB_FILENAME=${DB_FILENAME}
   container_name: ${DB_NAME}
   environment:
    - MYSQL_DATABASE=${DB_MYSQL_DATABASE}

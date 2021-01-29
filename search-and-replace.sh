@@ -2,11 +2,22 @@
 
 set -e
 
-source .env
+function num_server_started()
+{
+    echo `docker logs $DB_NAME 2>&1 | grep -c "$SERVER_STARTED_LOG"`
+}
 
-SLEEP=5
-SERVER_STARTED_LOG="mysqld: ready for connections"
-OUTPUT_FILE=out.sql
+function add_use_database()
+{
+    if grep -iq "^use .*;" db/$DB_FILENAME
+    then
+        sed -i "s/^[uU][sS][eE].*;/USE \`$DB_MYSQL_DATABASE\`;/g" db/$DB_FILENAME
+    else
+        sed -i "1s/^/USE \`$DB_MYSQL_DATABASE\`;\n/" db/$DB_FILENAME
+    fi
+}
+
+source .env
 
 if [ "$#" -ne 2 ]; then
     printf "2 parameters expected\nExample:\n./search-and-replace.sh http://old http://new\n"
@@ -15,12 +26,9 @@ fi
 
 docker-compose down
 
-docker-compose up -d --build --force-recreate
+add_use_database
 
-function num_server_started()
-{
-    echo `docker logs $DB_NAME 2>&1 | grep -c "$SERVER_STARTED_LOG"`
-}
+docker-compose up -d --build --force-recreate
 
 while [ `num_server_started` -lt 2 ]; do
     echo 'Waiting on database server is started up. Sleeping '$SLEEP's...'

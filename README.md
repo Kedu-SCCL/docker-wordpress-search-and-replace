@@ -1,9 +1,9 @@
 # Instructions
 
-1. Place the database dump in the 'db' directory and name it with '.sql' extension. Example:
+1. Place the database dump in the 'db' directory and name as 'wordpress.sql', or whatever variable 'DB_FILENAME' is set to. Example:
 
 ```
-db/dump.sql
+db/wordpress.sql
 ```
 
 2. Choose if you want to use the sample 'search-and-replace.sh' script for a very basic usage or follow manual instructions for more detailed steps.
@@ -15,6 +15,8 @@ db/dump.sql
 ```
 ./search-and-replace.sh http://localhost:8000 http://example.com
 ```
+
+2. Expected a file 'out.sql' (or whatever 'OUTPUT_FILE' variable is set to)
 
 ## Manual
 
