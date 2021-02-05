@@ -39,6 +39,6 @@ docker exec -i $APP_NAME php /wordpress-search-and-replace/srdb.cli.php -h $DB_N
 
 rm -fr $OUTPUT_FILE
 
-docker exec -i $DB_NAME mysqldump $DB_MYSQL_DATABASE -u $DB_MYSQL_USER -p$DB_MYSQL_PASSWORD > $OUTPUT_FILE
+docker exec -i $DB_NAME mysqldump --extended-insert=FALSE $DB_MYSQL_DATABASE -u $DB_MYSQL_USER -p$DB_MYSQL_PASSWORD > $OUTPUT_FILE
 
 docker-compose down
