@@ -8,7 +8,8 @@ services:
    args:
     - IMAGE=${APP_IMAGE}
     - VERSION=${APP_VERSION}
-  container_name: ${APP_NAME}
+  # To allow several executions at the same time, for instance CI such as jenkins
+  #container_name: ${APP_NAME}
   depends_on:
     - db
   environment:
@@ -25,7 +26,8 @@ services:
     - IMAGE=${DB_IMAGE}
     - VERSION=${DB_VERSION}
     - DB_FILENAME=${DB_FILENAME}
-  container_name: ${DB_NAME}
+  # To allow several executions at the same time, for instance CI such as jenkins
+  #container_name: ${DB_NAME}
   environment:
    - MYSQL_DATABASE=${DB_MYSQL_DATABASE}
    # https://github.com/docker-library/mariadb/issues/261#issuecomment-532786537
