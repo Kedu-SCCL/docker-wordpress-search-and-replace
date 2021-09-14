@@ -6,6 +6,7 @@ services:
   build:
    context: ./app
    args:
+    - MEMORY_LIMIT=${APP_MEMORY_LIMIT}
     - IMAGE=${APP_IMAGE}
     - VERSION=${APP_VERSION}
   # To allow several executions at the same time, for instance CI such as jenkins
