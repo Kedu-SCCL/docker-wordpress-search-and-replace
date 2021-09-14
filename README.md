@@ -5,6 +5,9 @@
 - [Instructions](#instructions)
   - [Using 'search-and-replace.sh' script](#using-search-and-replacesh-script)
   - [Manual](#manual)
+- [Troubleshooting](#troubleshooting)
+  - [Error launching search and replace script](#error-launching-search-and-replace-script)
+  - [db: Connection refused](#db-connection-refused)
 
 <!-- END doctoc.sh generated TOC please keep comment here to allow auto update -->
 # Instructions
@@ -49,7 +52,7 @@ watch -n 5 "docker exec -i db mysqladmin ping -u wordpress -pwordpress"
 
 Usualy it takes less than 1 minute, wait until you see below line:
 
-...
+```
 mysqld is alive
 ```
 
