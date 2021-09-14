@@ -1,3 +1,12 @@
+<!-- START doctoc.sh generated TOC please keep comment here to allow auto update -->
+<!-- DO NOT EDIT THIS SECTION, INSTEAD RE-RUN doctoc.sh TO UPDATE -->
+**:book: Table of Contents**
+
+- [Instructions](#instructions)
+  - [Using 'search-and-replace.sh' script](#using-search-and-replacesh-script)
+  - [Manual](#manual)
+
+<!-- END doctoc.sh generated TOC please keep comment here to allow auto update -->
 # Instructions
 
 1. Place the database dump in the 'db' directory and name as 'wordpress.sql', or whatever variable 'DB_FILENAME' is set to. Example:
