@@ -28,6 +28,12 @@ db/wordpress.sql
 ./search-and-replace.sh http://localhost:8000 http://example.com
 ```
 
+There's an optional third parameter in case that you want to increase the PHP setting 'memory_limit', 128 MB by default:
+
+```
+./search-and-replace.sh http://localhost:8000 http://example.com 1024m
+```
+
 2. Expected a file 'out.sql' (or whatever 'OUTPUT_FILE' variable is set to)
 
 ## Manual
@@ -141,3 +147,28 @@ Execution Time: 0 mins 0 secs
 ```
 
 Just wait some seconds before re-launching the command, since the database is not yet ready.
+
+## Allowed memory size of 134217728 bytes exhausted
+
+If the script:
+
+```
+./search-and-replace.sh http://localhost:8000 http://example.com
+```
+
+Failed with an error similar to:
+
+```
+[14-Sep-2021 13:34:19 Europe/London] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 20480 bytes) in /wordpress-search-and-replace/srdb.class.php on line 1272
+/usr/local/etc/php/php.ini
+```
+
+We need to increase PHP setting 'memory_limit' over its default value, 128 MB.
+
+Before doing so we need to clean up the docker containers (app and db) which are currently running.
+
+After that:
+
+```
+./search-and-replace.sh http://localhost:8000 http://example.com 1024m
+```

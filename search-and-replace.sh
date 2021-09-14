@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Parameters:
+# First: URL to be found
+# Second: URL to replace
+# Third (optional): new value for PHP setting 'memory_limit'
+# Example:
+# ./search-and-replace.sh http://localhost:8000 http://example.com 1024m
+
 set -e
 
 function num_server_started()
@@ -19,8 +26,8 @@ function add_use_database()
 
 source .env
 
-if [ "$#" -ne 2 ]; then
-    printf "2 parameters expected\nExample:\n./search-and-replace.sh http://old http://new\n"
+if [ "$#" -lt 2 ]; then
+    printf "At least 2 parameters are mandatory\nExample:\n./search-and-replace.sh http://old http://new\n"
     exit 1
 fi
 
@@ -37,7 +44,11 @@ docker-compose -p $TIMESTAMP down
 
 add_use_database
 
-docker-compose -p $TIMESTAMP up -d --build --force-recreate
+if [ -n "$3" ]; then
+    APP_MEMORY_LIMIT=$3 docker-compose -p $TIMESTAMP up -d --build --force-recreate
+else
+    docker-compose -p $TIMESTAMP up -d --build --force-recreate
+fi
 
 while [ `num_server_started` -lt 2 ]; do
     echo 'Waiting on database server is started up. Sleeping '$SLEEP's...'
