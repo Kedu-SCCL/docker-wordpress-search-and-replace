@@ -8,6 +8,7 @@
 - [Troubleshooting](#troubleshooting)
   - [Error launching search and replace script](#error-launching-search-and-replace-script)
   - [db: Connection refused](#db-connection-refused)
+  - [Allowed memory size of 134217728 bytes exhausted](#allowed-memory-size-of-134217728-bytes-exhausted)
 
 <!-- END doctoc.sh generated TOC please keep comment here to allow auto update -->
 # Instructions
